@@ -205,11 +205,10 @@ const deleteCart =async (req, res) => {
         // Algunos productos no se pudieron comprar
         return res.status(400).json({
           status: 'error',
-          message: 'Note: not enough stock for some products',
+          message: 'No hay suficiente stock de algunos productos ',
           productsNotProcessed: productsNotPurchased,
         });
       }
-  
       // Crear el ticket y responder al cliente
       const newTicket = await createTicket(productsToPurchase, cart.user);
       await cartRepository.delete(cid)
@@ -235,7 +234,6 @@ const deleteCart =async (req, res) => {
       const quantity = product.quantity;
       totalAmount += productPrice * quantity;
     }
-  
     return totalAmount;
   }
 
@@ -262,7 +260,6 @@ const deleteCart =async (req, res) => {
           throw new Error(`Product stock is insufficient for product ${product._id}`);
         }
         await product.save();
-        // Puedes guardar detalles del producto en el ticket, como cantidad comprada, precio unitario, etc.
         ticket.products.push({
           product: productToPurchase.product,
           quantity: productToPurchase.quantity,
@@ -271,7 +268,6 @@ const deleteCart =async (req, res) => {
       }
       console.log(ticket);
       //await cartRepository.cleanCart(cartId);
-
       await ticket.save();
       await session.commitTransaction();
       session.endSession();
@@ -284,7 +280,6 @@ const deleteCart =async (req, res) => {
     }
   }
   
-
 export {
     getCartById,
     createCart,

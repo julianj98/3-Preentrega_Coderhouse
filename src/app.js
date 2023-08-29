@@ -20,7 +20,7 @@ import initializePassport from "./config/passport.config.js";
 import isUser from './middlewares/isUser.js';
 //defino dotenv y las constantes del .env
 
-dotenv.config();
+dotenv.config({ path: 'src/.env' });
 const mongoUrl = process.env.MONGO_URL;
 const sessionSecret = process.env.SESSION_SECRET;
 
@@ -97,9 +97,7 @@ io.on('connection', (socket) => {
     io.emit('messageLogs', messages);
   });
 
-
   });
-
 
 const port = process.env.PORT || 8080;
 
@@ -107,14 +105,31 @@ const port = process.env.PORT || 8080;
     console.log(`Server is running on port ${port}` );
   });
   
-
-
 app.use("/api/sessions", sessionsRouter);
 
-
 export {io};
-//http://localhost:8080/api/sessions/login para loguearse en postman y asi probar los permisos
-//RUTAS DEL SISTEMA DE LOGIN pass admin adminCod3r123
+
+//ENDPOINTS
+//localhost:8080/api/sessions/login para loguearse en postman y asi probar los permisos
+/*ejemplo del body para session
+{
+  "email": "beltran@mail.com",
+  "password": "123456"
+}*/
+//NOTA: tambien puede servir
+// Ruta para finalizar compra localhost:8080/api/carts/64ecbfffd8ea7727c0808e18/purchase se puede cambiar el carrito, estuve probando ese del usuario beltran@mail.com
+//localhost:8080/api/carts/64ecbfffd8ea7727c0808e18 ruta tipo PUT que le puede ser util para modificar directamente las cantidades
+/*ejemplo del body para el PUT de arriba {
+  "products": [
+    {
+      "product": "64af73e163e30ce7b7dc208e",
+      "quantity": 100
+    }
+  ]
+}*/
+//localhost:8080/chat solo un usuario autenticado puede entrar
+
+//RUTAS DEL SISTEMA DE LOGIN 
 //localhost:8080/api/sessions/current mostrara un JSON con los datos del usuario si esta logueado, sino devolvera un not authenticated
 //localhost:8080/login
 //localhost:8080/register
