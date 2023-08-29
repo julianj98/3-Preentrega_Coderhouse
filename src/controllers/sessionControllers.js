@@ -4,6 +4,21 @@ import passport from "passport";
 import UserDTO from "../DTOs/UserDTO.js";
 const router = Router();
 
+const authenticateGithub = passport.authenticate("github");
+
+const githubCallback = passport.authenticate("github", {
+  successRedirect: "/products",
+  failureRedirect: "/login", // Puedes redirigir a otra página en caso de fallo
+});
+
+const handleGithubCallback = async (req, res) => {
+  req.session.user = {
+    name: req.user.first_name + " " + req.user.last_name,
+    email: req.user.email,
+    rol: req.user.email === "adminCoder@coder.com" ? "admin" : "user",
+  };
+  res.redirect("/products");
+};
 const getCurrentUser = (req,res)=>{
     if (req.session.user) {
       const { name, email, rol } = req.session.user;
@@ -66,6 +81,9 @@ const logoutUser =(req, res) => {
   }
   
 export {
+    authenticateGithub,
+    githubCallback,
+    handleGithubCallback,
     getCurrentUser,
     registerUser,
     loginUser,
